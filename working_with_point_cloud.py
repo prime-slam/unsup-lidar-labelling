@@ -119,7 +119,7 @@ def get_cloud_sum_in_world_coords(cloud_2, cloud_3):
     return cloud_3
 
 
-path_to_dataset = r'C:\myFiles\programming\summerSchool\datasets\dataset'
+path_to_dataset = r''
 sequence = '00'
 data = pykitti.odometry(path_to_dataset, sequence, frames=range(0, 10, 2))
 
