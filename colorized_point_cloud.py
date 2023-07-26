@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import open3d as o3d
-import pykitti
 import numpy as np
 
 
@@ -25,6 +24,18 @@ def get_list_of_point_colors_from_image(points, image):
     for i in range(len(colors)):
         colors[i] = (colors[i][0]/255, colors[i][1]/255, colors[i][2]/255)
     return colors
+
+
+def __delete_point_which_not_visible_on_image(points, image):
+    points = points[:, points[0] >= 0]
+    points = points[:, points[1] >= 0]
+    points = points[:, points[2] >= 0]
+    points_depth = points[2]
+    points = points[:2, :] / points[2, :]
+    points = np.vstack((points, points_depth))
+    points = points[:, points[0] <= image.width]
+    points = points[:, points[1] <= image.height]
+    return points
 
 
 def get_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
@@ -41,14 +52,7 @@ def get_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
     else:
         point_cloud.transform(dataset.calib.T_cam3_velo)
         points3d_coordinates_in_2d = dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[0] >= 0]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[1] >= 0]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[2] >= 0]
-    points_depth = points3d_coordinates_in_2d[2]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:2, :] / points3d_coordinates_in_2d[2, :]
-    points3d_coordinates_in_2d = np.vstack((points3d_coordinates_in_2d, points_depth))
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[0] <= image.width]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[1] <= image.height]
+    points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(points3d_coordinates_in_2d, image)
     point_cloud.points = o3d.utility.Vector3dVector(points3d_coordinates_in_2d.transpose())
     point_cloud.colors = o3d.utility.Vector3dVector(
         get_list_of_point_colors_from_image(points3d_coordinates_in_2d, image))
@@ -66,14 +70,7 @@ def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
         image = dataset.get_cam3(index_of_image)
         point_cloud.transform(dataset.calib.T_cam3_velo)
     points3d_coordinates_in_2d = dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[0] >= 0]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[1] >= 0]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[2] >= 0]
-    points_depth = points3d_coordinates_in_2d[2]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:2, :] / points3d_coordinates_in_2d[2, :]
-    points3d_coordinates_in_2d = np.vstack((points3d_coordinates_in_2d, points_depth))
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[0] <= image.width]
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:, points3d_coordinates_in_2d[1] <= image.height]
+    points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(points3d_coordinates_in_2d, image)
     points_depth = points3d_coordinates_in_2d[2]
     point_cloud = o3d.geometry.PointCloud()
     point_cloud.colors = o3d.utility.Vector3dVector(
