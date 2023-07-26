@@ -22,7 +22,7 @@ def get_list_of_point_colors_from_image(points, image):
     for i in range(points.shape[1]):
         colors.append(pixels[(int(points[1, i]) * image.width + int(points[0, i]))])
     for i in range(len(colors)):
-        colors[i] = (colors[i][0]/255, colors[i][1]/255, colors[i][2]/255)
+        colors[i] = (colors[i][0] / 255, colors[i][1] / 255, colors[i][2] / 255)
     return colors
 
 
@@ -48,14 +48,23 @@ def get_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
     point_cloud.points = o3d.utility.Vector3dVector(velo_data[:, :3])
     if cam_number == 2:
         point_cloud.transform(dataset.calib.T_cam2_velo)
-        points3d_coordinates_in_2d = dataset.calib.K_cam2 @ np.asarray(point_cloud.points).transpose()
+        points3d_coordinates_in_2d = (
+                dataset.calib.K_cam2 @ np.asarray(point_cloud.points).transpose()
+        )
     else:
         point_cloud.transform(dataset.calib.T_cam3_velo)
-        points3d_coordinates_in_2d = dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
-    points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(points3d_coordinates_in_2d, image)
-    point_cloud.points = o3d.utility.Vector3dVector(points3d_coordinates_in_2d.transpose())
+        points3d_coordinates_in_2d = (
+                dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
+        )
+    points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(
+        points3d_coordinates_in_2d, image
+    )
+    point_cloud.points = o3d.utility.Vector3dVector(
+        points3d_coordinates_in_2d.transpose()
+    )
     point_cloud.colors = o3d.utility.Vector3dVector(
-        get_list_of_point_colors_from_image(points3d_coordinates_in_2d, image))
+        get_list_of_point_colors_from_image(points3d_coordinates_in_2d, image)
+    )
     return point_cloud
 
 
@@ -69,13 +78,20 @@ def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
     else:
         image = dataset.get_cam3(index_of_image)
         point_cloud.transform(dataset.calib.T_cam3_velo)
-    points3d_coordinates_in_2d = dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
-    points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(points3d_coordinates_in_2d, image)
+    points3d_coordinates_in_2d = (
+            dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
+    )
+    points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(
+        points3d_coordinates_in_2d, image
+    )
     points_depth = points3d_coordinates_in_2d[2]
     point_cloud = o3d.geometry.PointCloud()
     point_cloud.colors = o3d.utility.Vector3dVector(
-        get_list_of_point_colors_from_image(points3d_coordinates_in_2d, image))
-    points3d_coordinates_in_2d = points3d_coordinates_in_2d[:2, :] * points3d_coordinates_in_2d[2, :]
+        get_list_of_point_colors_from_image(points3d_coordinates_in_2d, image)
+    )
+    points3d_coordinates_in_2d = (
+            points3d_coordinates_in_2d[:2, :] * points3d_coordinates_in_2d[2, :]
+    )
     points3d_coordinates_in_2d = np.vstack((points3d_coordinates_in_2d, points_depth))
     if cam_number == 2:
         new_points = np.linalg.inv(dataset.calib.K_cam2) @ points3d_coordinates_in_2d
@@ -86,9 +102,11 @@ def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
 
 
 def get_cloud_union_in_world_coords(dataset, cloud_2, cloud_3):
-    cloud_2.transform(np.linalg.inv(dataset.calib.T_cam2_velo)).\
-        transform(dataset.calib.T_cam0_velo).transform(dataset.poses[0])
-    cloud_3.transform(np.linalg.inv(dataset.calib.T_cam3_velo)).\
-        transform(dataset.calib.T_cam0_velo).transform(dataset.poses[0])
+    cloud_2.transform(np.linalg.inv(dataset.calib.T_cam2_velo)).transform(
+        dataset.calib.T_cam0_velo
+    ).transform(dataset.poses[0])
+    cloud_3.transform(np.linalg.inv(dataset.calib.T_cam3_velo)).transform(
+        dataset.calib.T_cam0_velo
+    ).transform(dataset.poses[0])
     cloud_3 += cloud_2
     return cloud_3
