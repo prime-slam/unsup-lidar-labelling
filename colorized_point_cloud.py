@@ -49,12 +49,12 @@ def get_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
     if cam_number == 2:
         point_cloud.transform(dataset.calib.T_cam2_velo)
         points3d_coordinates_in_2d = (
-                dataset.calib.K_cam2 @ np.asarray(point_cloud.points).transpose()
+            dataset.calib.K_cam2 @ np.asarray(point_cloud.points).transpose()
         )
     else:
         point_cloud.transform(dataset.calib.T_cam3_velo)
         points3d_coordinates_in_2d = (
-                dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
+            dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
         )
     points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(
         points3d_coordinates_in_2d, image
@@ -79,7 +79,7 @@ def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
         image = dataset.get_cam3(index_of_image)
         point_cloud.transform(dataset.calib.T_cam3_velo)
     points3d_coordinates_in_2d = (
-            dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
+        dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
     )
     points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(
         points3d_coordinates_in_2d, image
@@ -90,7 +90,7 @@ def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
         get_list_of_point_colors_from_image(points3d_coordinates_in_2d, image)
     )
     points3d_coordinates_in_2d = (
-            points3d_coordinates_in_2d[:2, :] * points3d_coordinates_in_2d[2, :]
+        points3d_coordinates_in_2d[:2, :] * points3d_coordinates_in_2d[2, :]
     )
     points3d_coordinates_in_2d = np.vstack((points3d_coordinates_in_2d, points_depth))
     if cam_number == 2:

@@ -81,8 +81,9 @@ def visualize_2d_colorized_point_cloud_on_plot(points, image):
 
 def show_colorized_point_cloud_from_two_cam(dataset, index):
     o3d.visualization.draw_geometries(
-        colorized_point_cloud.get_cloud_union_in_world_coords(dataset,
-                                      colorized_point_cloud.get_colorized_3d_point_cloud(dataset, index, 2),
-                                      colorized_point_cloud.get_colorized_2d_point_cloud(dataset, index, 3),
+        colorized_point_cloud.get_cloud_union_in_world_coords(
+            dataset,
+            colorized_point_cloud.get_colorized_3d_point_cloud(dataset, index, 2),
+            colorized_point_cloud.get_colorized_2d_point_cloud(dataset, index, 3),
         )
     )
