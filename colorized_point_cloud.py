@@ -75,12 +75,15 @@ def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
     if cam_number == 2:
         image = dataset.get_cam2(index_of_image)
         point_cloud.transform(dataset.calib.T_cam2_velo)
+        points3d_coordinates_in_2d = (
+        dataset.calib.K_cam2 @ np.asarray(point_cloud.points).transpose()
+        )
     else:
         image = dataset.get_cam3(index_of_image)
         point_cloud.transform(dataset.calib.T_cam3_velo)
-    points3d_coordinates_in_2d = (
+        points3d_coordinates_in_2d = (
         dataset.calib.K_cam3 @ np.asarray(point_cloud.points).transpose()
-    )
+        )
     points3d_coordinates_in_2d = __delete_point_which_not_visible_on_image(
         points3d_coordinates_in_2d, image
     )
