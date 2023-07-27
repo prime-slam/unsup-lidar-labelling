@@ -66,7 +66,9 @@ def visualize_2d_point_cloud_on_plot(points, image, point_square=2, transparency
     plt.show()
 
 
-def visualize_2d_colorized_point_cloud_on_plot(points, image, point_square=2, transparency=0.5):
+def visualize_2d_colorized_point_cloud_on_plot(
+    points, image, point_square=2, transparency=0.5
+):
     colors = colorized_point_cloud.get_list_of_point_colors_from_image(points, image)
     x = points[0]
     y = points[1]
