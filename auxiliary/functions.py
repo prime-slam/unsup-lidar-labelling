@@ -6,7 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 import pycocotools.mask as mask
-#import tensorflow as tf
 
 """
 
@@ -77,16 +76,6 @@ def save_mask_SAM_to_COCO(images, annotations, categories, path_to_res):
 
 
 def mIoU(ground_truth, pred):
-    # cm = [[1, 1],
-    #        [1, 1]]
-    # sum_row = [2, 2], sum_col = [2, 2], true_positives = [1, 1]
-    # iou = true_positives / (sum_row + sum_col - true_positives))
-    # result = (1 / (2 + 2 - 1) + 1 / (2 + 2 - 1)) / 2 = 0.33
-    # m = tf.keras.metrics.MeanIoU(num_classes=2)
-    # m.update_state([0, 0, 1, 1], [0, 1, 0, 1])
-    # m.result().numpy()
-    # pass
-    # coordinates of the area of intersection.
     ix1 = np.maximum(ground_truth[0], pred[0])
     iy1 = np.maximum(ground_truth[1], pred[1])
     ix2 = np.minimum(ground_truth[2], pred[2])
