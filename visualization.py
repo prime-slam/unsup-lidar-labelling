@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import colorized_point_cloud
-import open3d as o3d
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
+import open3d as o3d
+import seaborn as sns
+import colorized_point_cloud
 
 
 def show_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
@@ -49,11 +49,13 @@ def visualize_3d_point_cloud_on_plot(points, subplot_position=111, figsize=(32, 
     plt.show()
 
 
-def visualize_2d_point_cloud_on_plot(points, image, point_square = 2, transparency=0.5):
+def visualize_2d_point_cloud_on_plot(points, image, point_square=2, transparency=0.5):
     x = points[0]
     y = points[1]
     depth = points[2]
-    sns.scatterplot(x=x, y=y, hue=depth, alpha=transparency, s=point_square, legend=False)
+    sns.scatterplot(
+        x=x, y=y, hue=depth, alpha=transparency, s=point_square, legend=False
+    )
     ax = plt.gca()
     ax.set_ylim(ax.get_ylim()[::-1])
     ax.xaxis.tick_top()
@@ -64,12 +66,16 @@ def visualize_2d_point_cloud_on_plot(points, image, point_square = 2, transparen
     plt.show()
 
 
-def visualize_2d_colorized_point_cloud_on_plot(points, image, point_square = 2, transparency=0.5):
+def visualize_2d_colorized_point_cloud_on_plot(
+    points, image, point_square=2, transparency=0.5
+):
     colors = colorized_point_cloud.get_list_of_point_colors_from_image(points, image)
     x = points[0]
     y = points[1]
     fig, ax = plt.subplots()
-    sns.scatterplot(x=x, y=y, color=colors, alpha=transparency, s=point_square, legend=False, ax=ax)
+    sns.scatterplot(
+        x=x, y=y, color=colors, alpha=transparency, s=point_square, legend=False, ax=ax
+    )
     ax.set_aspect("equal")
     ax.set_ylim(ax.get_ylim()[::-1])
     ax.xaxis.tick_top()
