@@ -20,6 +20,17 @@ import colorized_point_cloud
 
 
 def show_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
+    """
+    Show a colorized 2D point cloud based on the Velodyne data and the given image.
+
+    Parameters:
+        dataset (pykitti.odometry): The dataset containing the Velodyne and camera data.
+        index_of_image (int): Index of the image in the dataset.
+        cam_number (int): Camera number (2 for camera 2, 3 for camera 3).
+
+    Returns:
+        None
+    """
     o3d.visualization.draw_geometries(
         [
             colorized_point_cloud.get_colorized_2d_point_cloud(
@@ -30,6 +41,17 @@ def show_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
 
 
 def show_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
+    """
+    Show a colorized 3D point cloud based on the Velodyne data and the given image.
+
+    Parameters:
+        dataset (pykitti.odometry): The dataset containing the Velodyne and camera data.
+        index_of_image (int): Index of the image in the dataset.
+        cam_number (int): Camera number (2 for camera 2, 3 for camera 3).
+
+    Returns:
+        None
+    """
     o3d.visualization.draw_geometries(
         [
             colorized_point_cloud.get_colorized_3d_point_cloud(
@@ -40,6 +62,17 @@ def show_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
 
 
 def visualize_3d_point_cloud_on_plot(points, subplot_position=111, figsize=(32, 32)):
+    """
+    Visualize a 3D point cloud on a 3D plot.
+
+    Parameters:
+        points (numpy.ndarray): Array of 3D points (shape: (N, 3)).
+        subplot_position (int): Position of the subplot.
+        figsize (tuple): Figure size.
+
+    Returns:
+        None
+    """
     x = np.asarray(points)[:, 0]
     y = np.asarray(points)[:, 1]
     z = np.asarray(points)[:, 2]
@@ -50,6 +83,18 @@ def visualize_3d_point_cloud_on_plot(points, subplot_position=111, figsize=(32, 
 
 
 def visualize_2d_point_cloud_on_plot(points, image, point_square=2, transparency=0.5):
+    """
+    Visualize a 2D point cloud on a 2D plot overlaid on the given image.
+
+    Parameters:
+        points (numpy.ndarray): Array of 2D points (shape: (3, N)).
+        image (PIL.Image): Image object for visualization.
+        point_square (int): Size of the plotted points.
+        transparency (float): Alpha value for the plotted points.
+
+    Returns:
+        None
+    """
     x = points[0]
     y = points[1]
     depth = points[2]
@@ -69,6 +114,18 @@ def visualize_2d_point_cloud_on_plot(points, image, point_square=2, transparency
 def visualize_2d_colorized_point_cloud_on_plot(
     points, image, point_square=2, transparency=0.5
 ):
+    """
+    Visualize a 2D colorized point cloud on a 2D plot overlaid on the given image.
+
+    Parameters:
+        points (numpy.ndarray): Array of 2D points (shape: (3, N)).
+        image (PIL.Image): Image object
+        point_square (int): Size of the plotted points.
+        transparency (float): Alpha value for the plotted points.
+
+    Returns:
+        None
+    """
     colors = colorized_point_cloud.get_list_of_point_colors_from_image(points, image)
     x = points[0]
     y = points[1]
@@ -86,6 +143,16 @@ def visualize_2d_colorized_point_cloud_on_plot(
 
 
 def show_colorized_point_cloud_from_two_cam(dataset, index):
+    """
+    Show the union of colorized 3D point clouds from camera 2 and camera 3.
+
+    Parameters:
+        dataset (pykitti.odometry): The dataset containing the Velodyne and camera data.
+        index (int): Index of the velodyne data in the dataset.
+
+    Returns:
+        None
+    """
     o3d.visualization.draw_geometries(
         colorized_point_cloud.get_cloud_union_in_world_coords(
             dataset,
