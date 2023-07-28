@@ -17,6 +17,16 @@ import numpy as np
 
 
 def get_list_of_point_colors_from_image(points, image):
+    """
+    Extracts colors from an image for each 2D point.
+
+    Parameters:
+        points (numpy.ndarray): Array of 2D points (shape: (2, N)).
+        image (PIL.Image): Image object from which colors will be extracted.
+
+    Returns:
+        list: List of RGB colors (values in range [0, 1]) for each point.
+    """
     pixels = list(image.getdata())
     colors = []
     for i in range(points.shape[1]):
@@ -39,6 +49,17 @@ def __delete_point_which_not_visible_on_image(points, image):
 
 
 def get_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
+    """
+    Generates a colorized 2D point cloud based on the velodyne data and the given image.
+
+    Parameters:
+        dataset (pykitti.odometry): The dataset containing the Velodyne and camera data.
+        index_of_image (int): Index of the image in the dataset.
+        cam_number (int): Camera number (2 for camera 2, 3 for camera 3).
+
+    Returns:
+        open3d.geometry.PointCloud: Colorized 2D point cloud.
+    """
     velo_data = dataset.get_velo(index_of_image)
     if cam_number == 2:
         image = dataset.get_cam2(index_of_image)
@@ -69,6 +90,17 @@ def get_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
 
 
 def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
+"""
+    Generates a colorized 3D point cloud based on the velodyne data and the given image.
+
+    Parameters:
+        dataset (pykitti.odometry): The dataset containing the Velodyne and camera data.
+        index_of_image (int): Index of the image in the dataset.
+        cam_number (int): Camera number (2 for camera 2, 3 for camera 3).
+
+    Returns:
+        open3d.geometry.PointCloud: Colorized 3D point cloud.
+    """
     velo_data = dataset.get_velo(index_of_image)
     point_cloud = o3d.geometry.PointCloud()
     point_cloud.points = o3d.utility.Vector3dVector(velo_data[:, :3])
@@ -105,6 +137,15 @@ def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
 
 
 def get_cloud_union_in_world_coords(dataset, cloud_2, cloud_3):
+    """
+    Transforms and merges two camera-based point clouds into the world coordinate system.
+    Parameters:
+        dataset (pykitti.odometry): The dataset containing calib and poses data.
+        cloud_2 (open3d.geometry.PointCloud): Camera 2 point cloud.
+        cloud_3 (open3d.geometry.PointCloud): Camera 3 point cloud.
+    Returns:
+        open3d.geometry.PointCloud: Merged point cloud in world coordinates.
+    """
     cloud_2.transform(np.linalg.inv(dataset.calib.T_cam2_velo)).transform(
         dataset.calib.T_cam0_velo
     ).transform(dataset.poses[0])
