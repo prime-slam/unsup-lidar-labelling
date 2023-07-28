@@ -1,0 +1,10 @@
+os
+opencv-python
+git+git://github.com/facebookresearch/segment-anything.git
+time
+imantics
+numpy
+json
+matplotlib
+torch
+torchvision
