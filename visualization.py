@@ -141,7 +141,7 @@ def visualize_2d_colorized_point_cloud_on_plot(points, image, point_square=2, tr
 
 
 def show_colorized_point_cloud_from_two_cam(dataset, index):
-     """
+    """
     Show the union of colorized 3D point clouds from camera 2 and camera 3.
 
     Parameters:
