@@ -90,7 +90,7 @@ def get_colorized_2d_point_cloud(dataset, index_of_image, cam_number):
 
 
 def get_colorized_3d_point_cloud(dataset, index_of_image, cam_number):
-"""
+    """
     Generates a colorized 3D point cloud based on the velodyne data and the given image.
 
     Parameters:
